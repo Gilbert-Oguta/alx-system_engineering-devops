@@ -1,3 +1,2 @@
-0	SCHOOL dat
-!:mime school.mgc
-file -c -m
+0 string SCHOOL School dat
+!:mime school
