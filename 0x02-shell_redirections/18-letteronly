@@ -1,2 +1,2 @@
 #1/bin/bash
-egrep '^[[:AaBbCc..Zz:]]' /etc/ssh/sshd_config
+egrep ^[[:alpha:]] /etc/ssh/sshd_config
