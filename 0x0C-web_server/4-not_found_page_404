@@ -6,22 +6,22 @@
 # page is served to the client as stated with the error_page directive.
 #configure a custom 404 page
 
-sudo apt-get update -y
+STRING="Hello World!"
 
-sudo apt-get install nginx -y
+REDIRECT="\n\tlocation /redirect_me {\n\t\treturn 301 https://youtu.be/dQw4w9WgXcQ;\n\t}\n"
+FILE="/etc/nginx/sites-available/default"
 
-echo "Hello World!" | sudo dd status=none of=/var/www/html/index.html
+ERRORFILE="/usr/share/nginx/html/404error.html"
+FOUR="Ceci n'est pas une page"
+ERRORREDIRECT="\n\terror_page 404 /404error.html;\n\tlocation = /404error.html {\n\t\troot /usr/share/nginx/html;\n\t\tinternal;\n\t}\n"
 
-echo "Ceci n'est pas une page" | sudo tee /var/www/html/404.html > /dev/null
+apt-get -y update
+apt-get -y install nginx
+ufw allow 'Nginx HTTP'
+sudo echo "$STRING" > /var/www/html/index.nginx-debian.html
+sed -i "37i\ $REDIRECT" "$FILE"
 
-REDIRECT="\\\n\tlocation /redirect_me {\n\t\t return 301 https://www.youtube.com/@HLB5r2wah;\n\t}\n"
+echo "$FOUR" > "$ERRORFILE"
+sed -i "37i\ $ERRORREDIRECT" "$FILE"
 
-sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.backup
-
-sudo sed -i "53i $REDIRECT" /etc/nginx/sites-available/default
-
-REDIRECT="\\\n\terror_page 404 /404.html;\n\n\tlocation = /404.html {\n\t\tinternal;\n\t}\n"
-
-sudo sed -i "53i $REDIRECT" /etc/nginx/sites-available/default
-
-sudo service nginx reload
+service nginx restart
